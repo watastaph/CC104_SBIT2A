@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>CC104 SBIT-2A Scores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a single centered "record card" column — course header, lookup slip, then the student's grade ledger */
+:root{
+  --bg:#f3f5f9; --surface:#ffffff; --ink:#18213a; --muted:#5a6580; --line:#d9deea;
+  --accent:#1d3f8f; --accent-soft:#e6ecfa; --good:#1f7a4d; --warn:#9a5b00; --warn-soft:#fdf1dc;
+  --bad:#a3282e; --bad-soft:#fbe7e8; --bar:#cfd7ea;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"Source Sans 3", "Segoe UI", Arial, sans-serif;
+  --mono:"JetBrains Mono", Consolas, "Courier New", monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1424; --surface:#171e33; --ink:#e7ebf5; --muted:#9aa5c2; --line:#2a3452;
+  --accent:#8fb0ff; --accent-soft:#1e2a4d; --good:#5fd19a; --warn:#f0b65a; --warn-soft:#3a2c14;
+  --bad:#ff8a8f; --bad-soft:#3d1c22; --bar:#2c3757; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0f1424; --surface:#171e33; --ink:#e7ebf5; --muted:#9aa5c2; --line:#2a3452;
+  --accent:#8fb0ff; --accent-soft:#1e2a4d; --good:#5fd19a; --warn:#f0b65a; --warn-soft:#3a2c14;
+  --bad:#ff8a8f; --bad-soft:#3d1c22; --bar:#2c3757; color-scheme:dark; }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:calc(28px + env(safe-area-inset-top,0px)) calc(40px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.1;margin:0;text-wrap:balance}
+h1 span{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 24px;margin-top:10px;
+  padding-block:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.meta div{min-width:0}
+.meta dt{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.meta dd{margin:2px 0 0;font-weight:600}
+.meta dd small{display:block;font-weight:400;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+h2{font-family:var(--display);font-weight:600;font-size:22px;margin:0 0 4px}
+.hint{color:var(--muted);margin:0 0 16px;font-size:15px}
+form{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+@media (max-width:560px){form{grid-template-columns:1fr}}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+input{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+input#sn{font-family:var(--mono);letter-spacing:.04em}
+input:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font:inherit;font-weight:700;background:var(--accent);color:var(--surface);border:0;border-radius:8px;padding:11px 20px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--line);padding:8px 14px;font-size:14px}
+.msg{margin:12px 0 0;font-size:15px}
+.msg.err{color:var(--bad)}
+.result-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.who{min-width:0}
+.stname{font-family:var(--display);font-weight:600;font-size:clamp(20px,5vw,26px);line-height:1.2;text-wrap:balance}
+.sid{font-family:var(--mono);font-size:15px;color:var(--muted);margin-top:2px}
+.group{margin-top:18px}
+.group h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;font-weight:700}
+.row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,2fr) auto;gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.name{font-weight:600}
+.name small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.track{height:8px;background:var(--bar);border-radius:999px;position:relative;overflow:hidden}
+.track i{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:999px}
+.score{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.score b{font-size:18px}
+.chip{display:inline-block;font-size:13px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.chip.miss{background:var(--bad-soft);color:var(--bad)}
+.chip.wait{background:var(--warn-soft);color:var(--warn)}
+.summary{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.summary .chip{background:var(--accent-soft);color:var(--accent)}
+footer{color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:4px}
+@media (max-width:480px){.row{grid-template-columns:1fr auto}.row .track{grid-column:1/-1;order:3}}
+@media (prefers-reduced-motion:no-preference){.track i{transition:width .5s ease}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="eyebrow">Quezon City University · College of Computer Studies</div>
+    <h1>CC104 <span>Data Structures and Algorithms</span></h1>
+    <dl class="meta">
+      <div><dt>Section</dt><dd>SBIT-2A</dd></div>
+      <div><dt>Lecture</dt><dd>7:00 AM – 9:00 AM<small>Room NA604a</small></dd></div>
+      <div><dt>Laboratory</dt><dd>11:30 AM – 1:30 PM<small>Room KB207b</small></dd></div>
+      <div><dt>Instructor</dt><dd>Dr. Ezekiel R. Borja</dd></div>
+    </dl>
+  </header>
+
+  <section class="card" aria-labelledby="lk">
+    <h2 id="lk">Check your scores</h2>
+    <p class="hint">Enter your student number to see your record.</p>
+    <form id="f" autocomplete="off">
+      <label for="sn">Student number<input id="sn" name="sn" placeholder="25-0000" inputmode="numeric" required></label>
+      <button type="submit">View scores</button>
+    </form>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="card" id="res" hidden aria-live="polite"></section>
+
+  <footer>
+    <span>Scores as of 14 October 2026. MLA1 is still being checked.</span>
+    <span>"No submission" means no score is recorded yet. If you think a score is wrong or missing, message your instructor with proof of submission.</span>
+  </footer>
+</main>
+<script>
+const DATA = {"recs":{"0ca49cc0ffbbb02b7641783c008025eca340ed4f4ef2ee60ea4a15b4128a092c":{"s":[10,10,10,10,10,8,17,45,"Checking",54,50,50],"n":["i4l06F/7Y5th6j95","RNUJ6Iw4gIw7xLLrPaatIOdhZoEKZZa3Whho0XMBC3xwKposRA=="]},"e96c4c5f6aab10899ba98f3356f88f1b0ec84f16a6f0d318e183f6d037a4a77a":{"s":[null,null,null,null,null,null,null,29,"Checking",null,null,null],"n":["udCNhLI5+XABSzoP","AcsIeH7HObqYYxt3FL0olOhbqybZu42AvpNrlYv0MnxX"]},"becd688f7724d1ab9038ea805ecfd5fd2404dc4046287ff58bdddff340c32e5b":{"s":[10,10,9,10,10,8,16,48,"Checking",38,50,50],"n":["IPBPgDT1Nj6eCkyV","Iemy5pr6RUCHpyuTV5tAI2joFzBltIWpFIppJSBE6k6CD0Rg3wRMp/7e"]},"42fbc2b85294ec047c777ebf8f560a1ac29d110b982e139e612e67b3042aab2e":{"s":[9,9,10,10,9,10,18,40,"Checking",47,50,35],"n":["FhZIK9dGBOPTbl1b","5H7aLEJUgMRBS2o/S1+2HWnRZSnvQ3Zsat8lXVqZqKM7Edzi"]},"68334308836af44c908bc51ee6a31055179546f8a0dfae61b017f4497c9caaf5":{"s":[8,9,10,10,8,7,13,34,"Checking",47,50,48],"n":["b8CXUSl/6yYMAXae","9+aY5gvvssNeakm+xDz1gTp9nFhJMUFBZmO3TSdAXopcwoYjbTp79BA="]},"f398243e6472ce8312e00882d317f17855dcc9a7963fc1d476f7f4528f5dbc00":{"s":[null,null,null,null,null,null,null,32,"Checking",null,null,null],"n":["VGDINVcSukJZLSHK","FiYglYGHToMymDR9AsNF7nPvZ4X3Ri8HhCxIwCgiBVCWzA=="]},"18f76a9a5d7b8212650c067d1e4b76608d65be6fd1a97fe17f8cae66404de308":{"s":[10,10,10,10,10,8,14,44,"Checking",56,50,50],"n":["y4TohPT5thkI+PCa","DUi+PbgNwJksHE3E6y7af4OKAmAJ21yTlRnd1vGo1zarx45o3SxM"]},"dcae0be415387479a90b7a8bfc23f0cce7621eeb545d6306417d998a50d70754":{"s":[10,10,10,10,10,10,19,null,"Checking",45,50,37],"n":["mv+36XMoqmBseBcG","W9UAG9FkN42dZwKKNi/kHwu8fqV3vQfpXJ44HxmaS6snSQ=="]},"56c52e8fbc4e97e8c981e18df5c5bb1db2763d535a149a6497d2f51903044035":{"s":[10,10,9,10,10,10,null,39,"Checking",54,50,50],"n":["wbT/Kwepue0Hv0W2","MLLWWqbEOM3xH5157Xq3QGazB57WAPzaA1h4DHWlVpUcAj1h"]},"3ce713aff4e56fc9fd72cec536f89c51b1f0abe3772c2e00d1bf38d4407ca5c4":{"s":[10,10,9,10,10,10,14,44,"Checking",51,50,50],"n":["f/DLzXNZqbbsBj+s","nbNDhz34SMOO0h9kZ5/NxUjEdgxpPMatGwDWD5siu0QL3+OIzL4="]},"92d6033f16d83c44df0a1d5559f353337d65099d3a7ef9157bd806e589b96046":{"s":[10,10,10,10,9,8,19,38,"Checking",54,50,45],"n":["fwyIM92lOgYUl3LS","Btt/LR51+mPyFMac2nXsC+BdVTdARqtzC9/dim3tMqJpocKZqoIoNQ=="]},"a1d03160a51705f899b2a3620f2e59659530993e1cefa051a8cf9ab6c1fb6b92":{"s":[10,8,9,10,8,10,16,41,"Checking",45,48,20],"n":["vwBoQpBi38PztNFX","YviK036ded6VsGpSW9sSb2IpxdTMlJvrq48wtG8f0K6FkagGUzsvgUE="]},"9119a59d2c1df7408930ff8539af915b56aa13138f60a57b770248c723be66f2":{"s":[10,10,9,10,10,10,20,47,"Checking",56,50,50],"n":["8V1u19+LmZESaySt","HUp3z60uovSzlFW8R68rajMe3NnQR3YQq0tKruXn4zCgUTEDe+HsKCk="]},"452f0b54601fdbf24f54a87757610c4bb917d72287257316458b0aad1b4aef78":{"s":[10,10,10,10,10,8,18,38,"Checking",49,50,41],"n":["oQL5nZgOPNyvE7YZ","9ZdVt+cJaqWNomkrHwJ8WTTs+oT1ErEcyUH3pLnhhEjfTLZa6ljr3A=="]},"7fd0de3be4cb6f5a9d92deae75ec6cc9208a450074461f5630ffa472e6fa1591":{"s":[10,10,null,7,5,null,null,34,"Checking",44,50,45],"n":["EDXIPXO9pcd6olUM","I4fgMk2ZEsc/ZBgSHVSvVBBrUePl8ZTz0ZL/6q5/FSTwi/+99Uc="]},"a508b22557863a63b1fc5b9cbb7cd37bc91c91a6916c3bf3656d874a03d2f385":{"s":[10,10,10,10,8,10,15,47,"Checking",38,50,42],"n":["ff8RnRPCD0/GYQpa","CEKb5VVCJekxDAD3jviAz7v1fFPjFqZy8BaDlV+vdofT/mcKsw=="]},"24f9780b277e47eb5aba60887397837371ceb832a5ef77298108bffb50f378a9":{"s":[10,10,10,10,10,10,20,49,"Checking",56,50,50],"n":["kJjXkqOBARLXxIPg","KrW/kYmd4uE8sPV7IY/7LCYk+fU5RsIw1sd3m0WeYHgTFg=="]},"7b7cba6d4d6d8ef47ddbb044a26b1df0e6b3a2ac5f19aab1dde453aca37902a5":{"s":[10,10,10,10,10,10,14,46,"Checking",51,50,null],"n":["T1WSsVKmy6A4/AYp","3lv4l79O/hvdVWvwmoAN1Saeb8G8Rj/J1/HuFQFcBU7JCQFSetWLoA=="]},"8d6cc99ba200c855ab86309bd16f08ff4194f26534e700bb25fa958436e0cc51":{"s":[9,10,9,10,10,8,null,37,"Checking",60,50,50],"n":["LQWaNT2aXei5VM3K","sNHuEgwbirvnwfT/k+MLKBYCRDulm6iWSXwq/sYPRPWMTmg9Pe7fbg=="]},"48e79ef2eaed270becdaa457b5e32c15ae1f7721033e27cd75930da989b4e43a":{"s":[10,10,10,10,10,6,20,50,"Checking",60,50,50],"n":["Z6KgUcxK2oRjWs7s","v65vGB1RZstROaje6EWgdOp1RY7WS5oFkgjoQAMdMeZ/K88pBrVQZw=="]},"faa1289fde4d6bd019cde2d3b9b6331c8cb7e8bcd7f0f4d9bc0dcb324197a296":{"s":[10,10,10,10,10,8,18,36,"Checking",43,50,42],"n":["/xwiUMGMw5SvBSS3","oDxz7an4Kewpg6j1RwlDlmWADWUybIHNwZMcL+0+4nKbbNl7DRg="]},"3ceff7c7e92c9d6869153f713751e8bac9db6e4eb574413bbdd3feb81720ea63":{"s":[10,10,9,10,10,8,17,40,"Checking",51,50,36],"n":["DFfMf0t0FPM1Vl4W","uoF6yIxT4RDnFBwhxmiZoOGC1q1fiDYOg5AyXw=="]},"a9e5910392e3f356d3c063f30e34cc5e64a418ba8b3648528099a97a763f0230":{"s":[10,10,10,10,10,8,20,47,"Checking",60,50,48],"n":["YO6qTajknELY8M3D","nTDQhI9xaqFD6SsA8LreJ67px1IlyDz6RM3Snp9qrpKgbA=="]},"f89ed9b3765a4182c58778399ea59cfd8afb375ded5a24e6680db2482653cf6b":{"s":[10,10,10,10,6,10,18,45,"Checking",60,50,50],"n":["CTNGLf/RTqCphvHl","F8T5YXUhIi9i+5Pgr5N3y6WGLcFMX0Z/xrM/myQEW35WBKJ0QnxM1ar+xQw="]},"4b8bfe507bcb5caafa2755d3168e12516706e508bd75f4d9e5d28e0d3375d3a5":{"s":[9,10,10,10,9,8,16,34,"Checking",54,50,50],"n":["psVNVKMgWASSca3l","OuwAYZ2avesq6WEw0A7Wl5Xcyc5LnBuy9dh/9+LvYk4gBxr73Hae/FFM"]},"395fab8232193a766848c51100fd483f8d39bff5c1d752d8e5d1162d1f4364c8":{"s":[10,10,9,9,10,8,16,48,"Checking",55,50,42],"n":["F6hQTpSSamsoyYNq","ZHemuSix8RAzFYq2rBUqPMvG3m2xnNEBcT0HN7wB0pjXoShX7A=="]},"ef4e73ada848120bdc2618b4697116c931a80ef03abc7ba59a270d36e71338a6":{"s":[10,10,9,9,10,10,19,40,"Checking",56,50,46],"n":["rPwwxBwcpPJjOxHD","NaAC3RQTBMbC1Pg+bCbXXhLmt3xIEdQ7WinjWxBitx3w+YXze3B4HSo="]},"b156adabe7bd6162dd7e95458fc94f9b8115befc577da9cbd54d5b4a88ec9e8b":{"s":[9,9,10,10,10,10,19,39,"Checking",51,50,50],"n":["z0gW7WAVKjCkusQ3","RC1RjmC4qAA9+W5vGGODVvEuRFwUsVG23iW9z3vEPkIX"]},"efe9090edfa4458d96d07b84346a4ed278a2f3a87352913bb73231fe1d173c1e":{"s":[10,10,8,10,10,10,null,42,"Checking",53,null,50],"n":["y0n4n9U0ekr+Kcgc","vE8qZwGqowkARhY5fnhDLZQvq+OAcKL0Ozg+d0En4hfJOaE="]},"50c09df265d36647c2d8817598c3f2eb9a92d257a62566b19f39432581e27059":{"s":[10,10,10,10,10,10,18,45,"Checking",60,50,45],"n":["AfdZ3uY9OT0vS9rx","LbOpbKnCUpSJXkDfMxwarFkuAVb5qfggGqdE++j/IToP"]},"cff499be796269b9f2c56a0b995c22b30d9587e418110194e80c40b0d3811d2b":{"s":[10,10,9,10,8,8,18,41,"Checking",60,null,39],"n":["VD27OS85NEEULrVP","IlFjnEgUUSu1DFXHAkeZF4BfgBk2lGVm2Reos3cq5i7tNTHgwEYNC492zw=="]},"2341dfb6eefc0b23133bb19343e75578599d8c1a6a1d22f7113eca3dbacb54bc":{"s":[null,null,null,null,null,null,14,29,"Checking",44,35,50],"n":["g4z3tFyHQPbFsdtT","bXmup9/TBul3/HOTYklXRweEvlOggcvF5+JN1gz7qTK9NT4="]},"41f3cb0294edc008c0c4be1b0908726c835f78da8a5af091f246d04884fcbf1c":{"s":[10,10,10,10,8,8,20,42,"Checking",60,50,50],"n":["pJ/6Lkv6MREQAEqX","7bvYwuu6GyQTzNrNph8GLwlgelvpSPJVbQNZ973whMGVPAGr"]},"010c3119e816e206e37d41e7ce62d6eec32a1bacbc08c1d8a306b7e75e7bb23f":{"s":[6,10,null,10,10,null,16,34,"Checking",58,50,46],"n":["wCW7lhNj6IP5eiWx","11btV466tLyiAIj93K+3ZbToz/MwbNKTDnyJq8Bg/oGhBhA="]},"7070a6a6625ad6752d82c424c0a71cadeba53d2a96cfbf8ceb54aa258d3f726a":{"s":[10,9,10,10,10,8,20,20,"Checking",54,50,41],"n":["HVwSaHzNxFXozZKW","qUngpNFxAAwpwTqZ0NBMcA55V1YBDbsbyWm8q2TRVZ3sju/iOvg="]},"b245b820ddbb10f5f983b0000b9ec971fb7f3b7c5856b239859d1b364fd830c6":{"s":[10,10,10,8,8,8,12,48,"Checking",34,48,48],"n":["0qe24onH1EKN88zf","2uLOKo1maSQwKqO3LqsnroZ2Lp7/RaAaBXkb25U06ppvUtapDg=="]},"38a2dc57768f4e6ad10f5dbde8336039b3dc4923f0c1fad1e4d60d55350bb096":{"s":[10,10,9,10,10,8,20,48,"Checking",54,50,50],"n":["uZtSL/NZb2/WDobW","mR3i/s8MlejzoemaJWGCxrXDxg9ulPLTzMQiwlYy5+bIMlGpjlHLIR0="]},"b4096d0f147208e3b1f64add496e9b8cff45f61ca0124392f12c69d9e3ad6765":{"s":[9,10,null,10,10,null,17,47,"Checking",54,50,45],"n":["37IHqZ8esKHnsaWl","A2QzwS7UWKutdJkA5jYP493Nj1GcywRtTYCZiiCbgcugfqGjAw=="]},"0545145aa0276e7d23bf5cc5e1bb78bce5c5beea7a940d6afb6dd36a9272f022":{"s":[10,10,10,8,10,8,11,47,"Checking",57,50,50],"n":["6jmSNSTY8WNfrhbA","kHx1Hom/0J7ciB6Dn+06UIXGm/WlwHNKhafGzZ66OHfBguElY3ceNim3uKMMraF8"]},"2ac94f5bea98ca1c0dd99912525fe6f717aebd16c4174abd2b5d683b15e49d9c":{"s":[10,10,null,10,10,null,12,49,"Checking",54,50,41],"n":["/drPQFOfzI5ry+dq","5cG9DpKn2xaf/kZiL1KtxiaI4sb1QoS1aj16qnIMDxgaEsi7oNRBBQm3"]},"764713072e216648ba8feb7034410e8b723d621cee8bd042183367a93cbc6d09":{"s":[10,10,null,10,10,null,17,48,"Checking",56,50,41],"n":["asGVdH4Dd1XQOVl8","DztgZY58OZO2pnw3TG5NOVBOJo/F6svKOlaWk6Ff+U8nSA=="]},"f0a22d5ba4191153bda7285e4e033eb2777cbe517250f3b3e1ba1ff01eb1f218":{"s":[9,null,8,10,null,10,null,null,"Checking",45,50,null],"n":["1a36STT0ZArDrNuz","bEnjT0Ix6G2aMduzfT7kRBJbNMKz4Vxbn60ug2u1N2zhumhl"]},"d0d6582f26df0fda652d521cd5f1993f27db0c0b264cdf8369d9bc45d99e2110":{"s":[9,10,9,10,10,10,null,40,"Checking",59,50,45],"n":["RBQelcI65+wqiWOc","0JsN8X2mKWRdY8eM39m/TVxqkR1213q4zItyn7W2hIfxwYQgXA=="]},"ed2382b46c66c74a1b271bea2d99169f38dd16afc847c0d3f1be912b9a42bc5c":{"s":[7,8,8,8,10,8,null,37,"Checking",51,null,50],"n":["AL0hTl3l3V7GocP1","lJF+DKLEub+WnADUildNzRN8XPgCi/I6qAcFB2k="]},"11de9ab76354cfcc32161d2f09f7fed65b78bbcc78ac975b2f5c11e8d9e6cca6":{"s":[10,10,10,10,10,5,12,47,"Checking",46,50,48],"n":["ys0htv/Gow+fpI+s","CmLsn0WX7VQ8YFSfMzdqDR8nlkBoTXq+Degs7xywdLCPGaIhuA=="]},"0584f549b65a00223c9fbd9eb6630e8e37e15c1b0dd5bb7ad3e434450cb25c58":{"s":[10,10,10,10,10,8,18,46,"Checking",54,50,48],"n":["ewktMi8Z4/mME3L6","Lzeb4m6jMlU65dP5rtHgzmbQJg5tQ+Zttc3B5wRmz3znlSPVbbrhOhG9KA=="]},"1039ccb444344fd241b72884966946796c43b73bbb11f93b6c6a80265f93112a":{"s":[10,10,9,10,10,10,null,37,"Checking",57,50,33],"n":["E+/VBRGFnjCUtT2m","DC5X0EnIHlRHAh2f9ff1TkrckFTVdwFzUEr/enU2JgL33ABO998JUPWglscXilE="]},"e04d14bfb2bf49938a0554e8cf16302b12457f41047cb88fee9243328128a444":{"s":[9,9,null,10,9,null,17,46,"Checking",54,50,50],"n":["ao3Ec6XDkUhCyXJh","MoMP64rGx5uBAZFe2w0mCIolLEkQ1wCE4sa8JaOErQ8y2oUN"]},"3d373d9faf0c95a48dd3ffb10e38c19dfdbc836cf7fb31612e72e8913a9691f7":{"s":[9,null,null,10,null,null,null,null,"Checking",null,null,37],"n":["5gNvcfO/NhLB67WX","JCOzXE4x9Cln5v5CHHVsq8CduzV9qSMeS884zZfDO+5YqA=="]},"6d470b38e206c0daa2bed95b8d67d30e082b736f057392cfc3c53bb42bbfd81e":{"s":[9,9,9,10,4,8,18,40,"Checking",60,50,48],"n":["+Ts+ag8mMSrZmO8b","gDSMECVA54ro3MAO4L9kgoOd6Cpr935v+dvawAjhgCEE76zVbQ=="]},"d55c9be19b0ac338e53922662d606db7cca6de9e2998140147eae4bfec6e1b27":{"s":[null,null,null,null,null,null,null,46,"Checking",null,null,43],"n":["0nGDyu+Y90RCx7oh","oMn3R8tKfVxNty0iTfmW/gMJEi8sfYNSgJZDWoO4fVYPyVuc"]},"1b0199e5a719114dbf226d55918bbdedba7a505d3a78de2a78ddd51b31118e67":{"s":[10,10,null,10,10,null,20,47,"Checking",45,50,46],"n":["ENyTqHqnthvi1QxP","kbVMbT/Av/NrPVPPbU70oPHGAQrZMSZdW/Cr8d0MiEsvtguwwkCMOQ=="]},"c393e72fe94a6d12e18a4c8de765417eb51310f2b079749bbd6e73608eca32a8":{"s":[10,10,10,10,10,10,17,45,"Checking",57,50,45],"n":["nNpswwKRM4JNqN1L","THPEooVr4hv6nOOqzZ2O+l5RhGydfk5nw62l58QxrNk06BlKcnN4F/gJ"]},"587828a0716759908720fc706c507a142301ee6a3ded71c3684fc52d0518015e":{"s":[10,10,null,10,10,null,18,46,"Checking",52,35,47],"n":["wwGt5tfClWOzGV8m","c8SX/R8TyZvAbowTIO4M81GB94KdoVHHNdRrpyMf7ajHs7k="]},"fe27e8abf757c15d770f0f7e77040da68e122d6ab443dd6df69e908affd75e06":{"s":[9,10,10,8,10,6,null,35,"Checking",35,34,35],"n":["bAfy3wg7AYs6PJ+S","OF6bus6tkcswq2piZuZCqZCzPiLJpCF+mZvY4VuDS4N6tZWGf7oeA4MY9g=="]},"8fb3badb4271ad26dcae36a76ea51587361909af2011d2a2db0cd12938e62034":{"s":[10,10,10,10,10,8,20,40,"Checking",55,50,50],"n":["e909J9j14bqirM8Y","M8C0MB+FWkmjLQiuJXNDyOUkLXGbdYZZH7cR+2pb1ej6"]},"2188f0ef6b6259b245d2a47762d9134f5db29e2db353f7dc9d60deb3d86a3f48":{"s":[8,9,10,10,10,8,19,37,"Checking",51,50,50],"n":["hnZdY1Y0XPRM3bDQ","56Qq+TnnswAuvMZjt/ujGifgr+baKvizpUNHPNQWC0Py"]},"55aa272d04c1c60e24451669ad87192066224c30dfa78825c0724df15ee8e4ad":{"s":[10,10,7,10,8,10,17,46,"Checking",51,50,42],"n":["jkkyCVOGl+9hRIOe","21kyKo1ghq1A1CSSWSfdb0yRsw8PvutiOoyfvkQ1v8mHJYNcCpTwFaI="]},"e68fde323d47f518fdc455021942b578d5eeb75b91db7ea455c65ad39dc9e7f4":{"s":[9,10,9,10,10,2,19,47,"Checking",35,36,42],"n":["wPC063Z62oYC/8JA","vZWWNlAjfnHqnpuT4zyGXKu/Rg2O1y+EsYHgbZwZQh3K6Vkd3ZxX"]},"3af4e23b87cc46513a7c26f2f7d02bf667b2c8f5008348df1e1e20e0cece3edd":{"s":[10,10,10,10,10,10,20,46,"Checking",45,50,50],"n":["amOmtTk89AC/nFdY","RnE+qBg8vcGstNXJBFzaWxG4yQPtWTkvi/FpM7Gai6vm84PAJuKnU2npxL4="]}}};
+const ITEMS = [
+  ["Quizzes",[["Quiz 1",10],["Quiz 2",10],["Quiz 3",10]]],
+  ["Seatworks",[["Seatwork 1",10],["Seatwork 2",10],["Seatwork 3",10]]],
+  ["Recitation",[["Week 7 Recitation",20]]],
+  ["Examination",[["Midterm Exam",50]]],
+  ["Laboratory Activities",[["Midterm Lab Activity 1",50],["Midterm Lab Activity 2",60],["Midterm Lab Activity 3",50],["Midterm Lab Activity 4",50]]]
+];
+function norm(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");}
+function cleanSN(s){const d=s.replace(/\D/g,""); return d.length===6? d.slice(0,2)+"-"+d.slice(2) : s.trim();}
+async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+const el=(t,c,h)=>{const e=document.createElement(t); if(c) e.className=c; if(h!=null) e.innerHTML=h; return e;};
+async function decName(sn,n){try{const raw=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("name|"+sn));
+const key=await crypto.subtle.importKey("raw",raw,"AES-GCM",false,["decrypt"]);
+const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b(n[0])},key,b(n[1])));}catch(e){return "";}}
+function render(sn,r,nm){
+  const res=document.getElementById("res"); res.innerHTML="";
+  const head=el("div","result-head");
+  const who=el("div","who"); const nmEl=el("div","stname"); nmEl.textContent=nm; who.appendChild(nmEl); who.appendChild(el("div","sid",sn)); head.appendChild(who);
+  const clr=el("button","ghost","Clear"); clr.type="button";
+  clr.onclick=()=>{res.hidden=true;document.getElementById("f").reset();document.getElementById("msg").textContent="";document.getElementById("sn").focus();};
+  head.appendChild(clr); res.appendChild(head);
+  let miss=0,wait=0,k=0;
+  for(const [g,list] of ITEMS){
+    const grp=el("div","group"); grp.appendChild(el("h3","",g));
+    for(const [name,max] of list){
+      const v=r[k]; k++;
+      const row=el("div","row");
+      row.appendChild(el("div","name", name));
+      const tr=el("div","track"); const bar=document.createElement("i");
+      bar.style.width=(typeof v==="number"? Math.max(0,Math.min(100,v/max*100)):0)+"%"; tr.appendChild(bar); row.appendChild(tr);
+      let s;
+      if(v===null){s='<span class="chip miss">No submission</span>';miss++;}
+      else if(v==="Checking"){s='<span class="chip wait">Checking</span>';wait++;}
+      else s='<b>'+v+'</b> / '+max;
+      row.appendChild(el("div","score",s));
+      grp.appendChild(row);
+    }
+    res.appendChild(grp);
+  }
+  const sum=el("div","summary");
+  sum.appendChild(el("span","chip", miss? miss+" item"+(miss>1?"s":"")+" with no submission":"No missing items"));
+  if(wait) sum.appendChild(el("span","chip", wait+" still being checked"));
+  res.insertBefore(sum,res.children[1]);
+  res.hidden=false; res.scrollIntoView({behavior:"smooth",block:"start"});
+}
+document.getElementById("f").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const msg=document.getElementById("msg");
+  const sn=cleanSN(document.getElementById("sn").value);
+  if(!crypto.subtle){msg.className="msg err";msg.textContent="This browser can't open the record. Try a current version of Chrome, Edge, Firefox or Safari.";return;}
+  const rec=DATA.recs[await sha(sn)];
+  if(!rec){document.getElementById("res").hidden=true;msg.className="msg err";
+    msg.textContent="No record matches that student number. Check the format, for example 25-0045.";return;}
+  msg.className="msg";msg.textContent="";render(sn,rec.s,await decName(sn,rec.n));
+});
+</script>
+</body>
+</html>
